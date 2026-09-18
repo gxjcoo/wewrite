@@ -54,3 +54,9 @@ CLAUDE.md
 # Next.js build/export artifacts
 web/frontend/.next/
 web/frontend/out/
+
+# 本地研究素材：BettaFish 研报输入（含未核实模型综合数据，不入库）
+mds/
+
+# 本地代码索引（CodeGraph）
+.codegraph/
