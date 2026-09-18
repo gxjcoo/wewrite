@@ -45,6 +45,12 @@ claim，结尾是否交付 `goal.takeaway/action`。无关段落删除，不用�
 检查所有第一人称事件、朋友同事、采访、对话、时间地点和感官细节。它们必须来自本次任务
 明确记录的用户材料；否则属于阻断问题，直接删除或改成非亲历论述。
 
+素材含 BettaFish（微舆）研报时，按 `{skill_dir}/../wewrite/references/bettafish-verification.md`
+执行验证闸门：正文中每个数字、日期、引述都必须能对到至少一条 `verified` 外部信源；
+只能对到 `user_provided` 报告的事实性内容按 blocker 处理（删除或补证）；模型合成的
+声量/情绪精确指标不得出现在文中；报告内部矛盾必须已有外部裁决；finish 时
+`provenance.unverified_sources` 只允许包含那一条报告 source。
+
 ### 3. 五项编辑判断
 
 按“准确、观点、有用、合声、好读”各评 1-5 分，并列出阻断问题和最多 5 个主要问题：

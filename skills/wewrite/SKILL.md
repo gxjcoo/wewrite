@@ -26,6 +26,7 @@ allowed-tools:
 - 配图、排版和发布是正文完成后的独立动作；不得为了排版或发布自动触发生图。
 - “完整制作”是正文、配图和本地预览的组合快捷方式；只有明确说“推到草稿箱/发布”才允许调用发布命令。
 - 搜索失败时可以继续写分析和经验判断，但不得把模型记忆包装成已核实的事实。
+- **BettaFish（微舆）研报只作内部待核素材**：报告中的每条事实性内容（数字、日期、比例、引述、事件）必须经外部信源交叉验证后才能入文；模型合成的声量/情绪指标一律弃用。规程见 `{skill_dir}/references/bettafish-verification.md`，审稿按其中的闸门执行。
 
 `{home}` 是 `wewrite home` 返回的状态目录。`{skill_dir}` 是本 skill 目录。确定性操作走 `wewrite` 命令。
 
@@ -83,6 +84,12 @@ wewrite run step topic completed
 
 执行 `wewrite-write`。先保存 `artifacts.brief` 和 `artifacts.claims`，再把初稿保存到
 `artifacts.draft`；所有网页素材同步记录到本任务的 `sources.yaml`。初稿不是成稿。
+
+素材含 BettaFish 研报时，写作前必须先完成
+`{skill_dir}/references/bettafish-verification.md` 的验证规程：报告整体登记为一条
+`user_provided` source；每条事实性 claim 用外部权威信源验证（普通 ≥1、关键 ≥2 个），
+验证不过的精确数字删除；报告内部矛盾用外部信源裁决并解释；可复算数字亲自复算；主动
+检索反方信源；正文用 callout 披露口径。
 
 ### 5. 编辑审稿
 
