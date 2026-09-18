@@ -52,7 +52,26 @@ def _usage() -> str:
     return "\n".join(lines)
 
 
+def _force_utf8_stdio() -> None:
+    """把标准输出/错误切到 UTF-8，避免非 UTF-8 控制台编码崩溃。
+
+    中文 Windows 的默认编码是 GBK/cp936；管道或重定向时 Python 按区域编码
+    输出，diagnose 等命令里的 ░ 等字符会直接 UnicodeEncodeError。UTF-8 能编码
+    全部 Unicode，errors="replace" 再兜底，任何环境下 CLI 都不因输出字符崩溃。
+    """
+    for stream in (sys.stdout, sys.stderr):
+        encoding = (getattr(stream, "encoding", "") or "").lower().replace("-", "")
+        if encoding == "utf8":
+            continue
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            # 被替换过的非标准流（嵌入式宿主、测试替身）没有 reconfigure，跳过
+            pass
+
+
 def main() -> None:
+    _force_utf8_stdio()
     argv = sys.argv[1:]
     if not argv or argv[0] in {"-h", "--help"}:
         print(_usage())
