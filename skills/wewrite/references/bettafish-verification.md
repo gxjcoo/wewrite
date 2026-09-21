@@ -30,6 +30,9 @@ BettaFish 的爬虫链路（MindSpider/MediaCrawler）当前为空 submodule、S
   status: user_provided
 ```
 
+注意 YAML：标题以引号开头（如 `"西贝被曝…"上热搜`）会被解析成带引号标量导致
+finish 时解析失败，整串用单引号包裹：`title: '"西贝被曝…"上热搜'`。
+
 ## 2. 逐条拆 claim
 
 把报告里每个**数字、日期、比例、引述、事件、排名**拆成独立 claim 进 `claims.yaml`，
@@ -52,7 +55,7 @@ BettaFish 的爬虫链路（MindSpider/MediaCrawler）当前为空 submodule、S
 ## 4. 判定与去向
 
 | 判定 | 条件 | 去向 |
-|---|---|---|
+| --- | --- | --- |
 | `supported` | 有可靠外部信源确认/复算 | 可入文，仍须写 `boundary`（口径、时点、样本局限） |
 | `bounded` | 只部分核实或多源口径冲突 | 只取趋势性结论，正文显式标注口径冲突 |
 | `unsupported` | 找不到任何外部信源 | **从正文删除**，禁止以"报告显示/据监测"变相引用 |
