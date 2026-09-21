@@ -505,7 +505,7 @@ class WeChatConverter:
                                    f'<section style="background: #f3f4f6; color: #333; padding: 10px 14px; border-radius: 12px 12px 12px 2px; max-width: 80%; font-size: 15px; line-height: 1.6">{self._inline_md(line)}</section></section>')
             return '\n'.join(bubbles)
 
-        return re.sub(r':::dialogue\n(.*?)\n:::', replace_dialogue, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*dialogue\n(.*?)\n:::[ \t]*(?=\n|$)', replace_dialogue, text, flags=re.DOTALL)
 
     def _process_timeline(self, text: str) -> str:
         """Convert :::timeline blocks to vertical timeline HTML."""
@@ -530,30 +530,43 @@ class WeChatConverter:
                 )
             return '\n'.join(items)
 
-        return re.sub(r':::timeline\n(.*?)\n:::', replace_timeline, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*timeline\n(.*?)\n:::[ \t]*(?=\n|$)', replace_timeline, text, flags=re.DOTALL)
 
     def _process_callout(self, text: str) -> str:
         """Convert :::callout blocks to styled callout boxes.
 
-        Syntax: :::callout tip/warning/info/danger
+        Syntax（::: 后允许空格，兼容 Obsidian 写法）:
+          :::callout tip/warning/info/danger
+          ::: callout info
+        颜色可由主题 colors.callout_<kind> / callout_<kind>_bg 覆盖。
         """
-        colors_map = {
-            "tip": ("#059669", "#ecfdf5", "💡"),
-            "warning": ("#d97706", "#fffbeb", "⚠️"),
-            "info": ("#2563eb", "#eff6ff", "ℹ️"),
-            "danger": ("#dc2626", "#fef2f2", "🚨"),
+        # (默认色, 默认底色, 图标, 中文标题)
+        defaults = {
+            "tip": ("#059669", "#ecfdf5", "💡", "提示"),
+            "warning": ("#d97706", "#fffbeb", "⚠️", "注意"),
+            "info": (self._theme.colors.get("primary", "#2563eb"), "#eff6ff", "ℹ️", "说明"),
+            "danger": ("#dc2626", "#fef2f2", "🚨", "警告"),
         }
+
+        def palette(kind: str):
+            d_color, d_bg, icon, label = defaults[kind]
+            color = self._theme.colors.get(f"callout_{kind}", d_color)
+            bg = self._theme.colors.get(f"callout_{kind}_bg", d_bg)
+            return color, bg, icon, label
 
         def replace_callout(match):
             ctype = match.group(1).strip().lower()
+            if ctype not in defaults:
+                ctype = "info"
             content = match.group(2).strip()
-            color, bg, icon = colors_map.get(ctype, colors_map["info"])
+            color, bg, icon, label = palette(ctype)
             return (f'<section style="background: {bg}; border-left: 4px solid {color}; '
-                    f'padding: 14px 16px; border-radius: 4px; margin: 16px 0; font-size: 15px; line-height: 1.7">'
-                    f'<section style="font-weight: 700; color: {color}; margin-bottom: 6px">{icon} {ctype.upper()}</section>'
+                    f'padding: 14px 16px; border-radius: 4px; margin: 20px 0; font-size: 15px; line-height: 1.75">'
+                    f'<section style="font-weight: 700; color: {color}; margin-bottom: 6px">{icon} {label}</section>'
                     f'{self._inline_md(content)}</section>')
 
-        return re.sub(r':::callout\s+(\w+)\n(.*?)\n:::', replace_callout, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*callout[ \t]+(\w+)\n(.*?)\n:::[ \t]*(?=\n|$)',
+                      replace_callout, text, flags=re.DOTALL)
 
     def _process_quote_block(self, text: str) -> str:
         """Convert :::quote blocks to styled pull quotes."""
@@ -566,7 +579,7 @@ class WeChatConverter:
                     f'<section style="font-size: 18px; line-height: 1.8; color: #333; font-style: italic">'
                     f'"{self._inline_md(content)}"</section></section>')
 
-        return re.sub(r':::quote\n(.*?)\n:::', replace_quote, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*quote\n(.*?)\n:::[ \t]*(?=\n|$)', replace_quote, text, flags=re.DOTALL)
 
     def _process_pullquote(self, text: str) -> str:
         """Convert :::pullquote blocks to centered stand-alone pull quotes（金句居中）."""
@@ -582,7 +595,7 @@ class WeChatConverter:
                 f'<section style="width: 36px; height: 2px; background: {primary}; margin: 16px auto 0"><span leaf=""><br></span></section>'
                 f'</section>')
 
-        return re.sub(r':::pullquote\n(.*?)\n:::', replace_pullquote, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*pullquote\n(.*?)\n:::[ \t]*(?=\n|$)', replace_pullquote, text, flags=re.DOTALL)
 
     def _process_label(self, text: str) -> str:
         """Convert :::label blocks to mini section labels（小标签标题）.
@@ -609,7 +622,7 @@ class WeChatConverter:
                 f'<section style="font-size: 16px; font-weight: 700; color: #1a1a1a">{content}</section>'
                 f'</section>')
 
-        return re.sub(r':::label[ \t]*(\w*)\n(.*?)\n:::', replace_label, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*label[ \t]*(\w*)\n(.*?)\n:::[ \t]*(?=\n|$)', replace_label, text, flags=re.DOTALL)
 
     def _process_steps(self, text: str) -> str:
         """Convert :::steps blocks to numbered step cards（步骤卡）.
@@ -637,7 +650,7 @@ class WeChatConverter:
                     f'</section>')
             return '<section style="margin: 20px 0">' + '\n'.join(items) + '</section>'
 
-        return re.sub(r':::steps\n(.*?)\n:::', replace_steps, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*steps\n(.*?)\n:::[ \t]*(?=\n|$)', replace_steps, text, flags=re.DOTALL)
 
     def _number_sections(self, html: str) -> str:
         """给 H2 加两位数章节编号（01/02/…）。主题 YAML 顶层 section_numbering: true 启用。"""
@@ -682,7 +695,7 @@ class WeChatConverter:
             html += '</section>'
             return html
 
-        return re.sub(r':::highlight\n(.*?)\n:::', replace_highlight, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*highlight\n(.*?)\n:::[ \t]*(?=\n|$)', replace_highlight, text, flags=re.DOTALL)
 
     def _process_summary(self, text: str) -> str:
         """Convert :::summary blocks to teal summary boxes (Impeccable style)."""
@@ -703,7 +716,7 @@ class WeChatConverter:
             html += '</section>'
             return html
 
-        return re.sub(r':::summary\n(.*?)\n:::', replace_summary, text, flags=re.DOTALL)
+        return re.sub(r':::[ \t]*summary\n(.*?)\n:::[ \t]*(?=\n|$)', replace_summary, text, flags=re.DOTALL)
 
     # -- Digest generation --
 

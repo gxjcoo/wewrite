@@ -36,6 +36,7 @@ allowed-tools:
 读取: {skill_dir}/references/editorial-quality.md
 读取: {skill_dir}/references/frameworks-quick.md
 读取: {skill_dir}/references/content-enhance.md
+读取: {skill_dir}/references/sticky-rhythm.md
 ```
 
 ### 3.1 先定义文章
@@ -85,7 +86,11 @@ wewrite sources add --url "{原始页面}" --title "{标题}" --publisher "{发�
 写作要求：
 
 - 标题准确、有明确对象和利益点；正文通常 1200-2500 字，可按任务书调整。
-- 开头尽快进入读者问题或核心判断；每一节服务 `brief.sections` 和对应 claim。
+- 开头三句内给钩子（反直觉判断/说法vs数据/处境提问），不以"X月X日某话题冲上热搜"裸开。
+- 按 `sticky-rhythm.md` 控制手机端节奏：常态段落≤80字、硬上限约120字，长短段交替，
+  每300-500字一次转折或视觉停顿，每篇2-4句金句（1-2张 pullquote）、3-5个文内
+  视觉元素（highlight/summary/steps 等），加粗≤5处。
+- 每一节服务 `brief.sections` 和对应 claim。
 - 清楚区分事实、推断和个人意见；写出反方和适用边界，不用共识或套话凑字数。
 - 账号声音来自 style、persona 和经过筛选的学习结果，但内容与证据永远优先。
 - 禁止编造亲历、身份、采访、数字、评价、引用和来源中不存在的细节。

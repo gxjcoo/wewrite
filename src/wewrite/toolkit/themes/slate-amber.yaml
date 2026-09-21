@@ -1,0 +1,208 @@
+name: "slate-amber"
+description: "量化吃瓜账号主题：蓝灰为骨、琥珀点睛，米白纸面，手机端轻排版"
+colors:
+  primary: "#475569"
+  secondary: "#b45309"
+  accent: "#f59e0b"
+  text: "#334155"
+  text_light: "#64748b"
+  background: "#f8f7f4"
+  code_bg: "#fef3c7"
+  code_color: "#b45309"
+  quote_border: "#94a3b8"
+  quote_bg: "#f1f5f9"
+  highlight_bg: "#fffbeb"
+  highlight_border: "rgba(217,119,6,0.25)"
+  summary_bg: "#f1f5f9"
+  summary_border: "rgba(71,85,105,0.2)"
+  callout_tip: "#059669"
+  callout_tip_bg: "#ecfdf5"
+  callout_warning: "#d97706"
+  callout_warning_bg: "#fffbeb"
+  callout_info: "#475569"
+  callout_info_bg: "#f1f5f9"
+  callout_danger: "#dc2626"
+  callout_danger_bg: "#fef2f2"
+  border_radius: "6px"
+  darkmode:
+    background: "#1e1e1e"
+    text: "#c8c8c8"
+    text_light: "#94a3b8"
+    primary: "#94a3b8"
+    accent: "#f59e0b"
+    code_bg: "#2d2d2d"
+    code_color: "#d4a04c"
+    quote_bg: "#252525"
+    quote_border: "#64748b"
+base_css: |
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 16px;
+    line-height: 1.85;
+    color: #334155;
+    background: #f8f7f4;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px;
+    word-wrap: break-word;
+  }
+
+  h1 {
+    font-size: 25px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 28px 0 16px 0;
+    line-height: 1.4;
+  }
+
+  h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 34px 0 14px 0;
+    padding: 2px 0 2px 12px;
+    border-left: 3px solid #f59e0b;
+    line-height: 1.45;
+  }
+
+  h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #334155;
+    margin: 26px 0 10px 0;
+    line-height: 1.45;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #334155;
+    margin: 20px 0 10px 0;
+    line-height: 1.4;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #334155;
+    margin: 14px 0;
+  }
+
+  strong {
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  em {
+    font-style: italic;
+    color: #334155;
+  }
+
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    background: #fef3c7;
+    color: #b45309;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 16px 0;
+    line-height: 1.6;
+  }
+
+  pre code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    font-size: 14px;
+    background: none;
+    color: #e2e8f0;
+    padding: 0;
+    border-radius: 0;
+  }
+
+  blockquote {
+    border-left: 3px solid #94a3b8;
+    background: #f1f5f9;
+    margin: 18px 0;
+    padding: 10px 16px;
+    border-radius: 0 6px 6px 0;
+    color: #334155;
+  }
+
+  blockquote p {
+    margin: 8px 0;
+    color: #334155;
+  }
+
+  ul {
+    padding-left: 24px;
+    margin: 12px 0;
+  }
+
+  ol {
+    padding-left: 24px;
+    margin: 12px 0;
+  }
+
+  li {
+    font-size: 16px;
+    line-height: 1.85;
+    color: #334155;
+    margin: 6px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: 15px;
+  }
+
+  thead {
+    background: #475569;
+  }
+
+  th {
+    background: #475569;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border: 1px solid #475569;
+  }
+
+  td {
+    padding: 10px 14px;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+  }
+
+  tr {
+    background: #f8f7f4;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 6px;
+  }
+
+  a {
+    color: #b45309;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px dashed #cbd5e1;
+    margin: 28px 0;
+  }

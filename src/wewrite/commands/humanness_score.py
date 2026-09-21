@@ -248,7 +248,8 @@ def score_sentence_integrity(text):
             continue
         for p in BROKEN_SENTENCE_PATTERNS:
             count += len(re.findall(p, line))
-        if 1 <= len(line) <= 10 and not line.startswith('#'):
+        # 容器围栏行（::: / :::steps 等）不是碎片，跳过
+        if 1 <= len(line) <= 10 and not line.startswith('#') and not line.startswith(':::'):
             count += 1
     char_count = len(text)
     allowed = max(1, char_count / 1000)

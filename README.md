@@ -60,7 +60,7 @@
 </tr>
 </table>
 
-> 全部 18 个主题：装好后 `wewrite gallery` 在浏览器里并排对比 + 一键复制。
+> 全部 19 个主题：装好后 `wewrite gallery` 在浏览器里并排对比 + 一键复制。
 
 ## ✅ 适合 / ❌ 不适合
 
@@ -241,7 +241,7 @@ wewrite themes     # 列出主题名称
 | 文艺 | `warm-editorial`、`sspai`、`ink`、`elegant-rose` |
 | 商务 | `bold-navy`、`minimal-gold`、`bold-green` |
 | 风格 | `bauhaus`、`focus-red`、`midnight` |
-| 专属 | `impeccable`、`lobster-notes` |
+| 专属 | `impeccable`、`lobster-notes`、`slate-amber` |
 
 所有主题均支持微信暗黑模式。`wewrite learn-theme <url>` 学到的新主题存在 `~/.wewrite/themes/`，加载时优先于内置主题。
 

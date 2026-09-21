@@ -88,17 +88,25 @@ class TestTimelineContainer:
 
 
 class TestCalloutContainer:
-    @pytest.mark.parametrize("kind,icon", [
-        ("tip", "💡"),
-        ("warning", "⚠️"),
-        ("info", "ℹ️"),
-        ("danger", "🚨"),
+    @pytest.mark.parametrize("kind,icon,label", [
+        ("tip", "💡", "提示"),
+        ("warning", "⚠️", "注意"),
+        ("info", "ℹ️", "说明"),
+        ("danger", "🚨", "警告"),
     ])
-    def test_callout_types(self, converter, kind, icon):
+    def test_callout_types(self, converter, kind, icon, label):
         md = f":::callout {kind}\n内容文本\n:::"
         result = converter.convert(md)
         assert icon in result.html
-        assert kind.upper() in result.html
+        assert label in result.html
+        assert "内容文本" in result.html
+
+    def test_callout_tolerates_space_after_fence(self, converter):
+        """Obsidian 写法 '::: callout info' 必须被识别（回归：旧正则只认无空格）。"""
+        md = "::: callout info\n内容文本\n:::"
+        result = converter.convert(md)
+        assert ":::" not in result.html
+        assert "说明" in result.html
         assert "内容文本" in result.html
 
     def test_unknown_callout_defaults_to_info(self, converter):
