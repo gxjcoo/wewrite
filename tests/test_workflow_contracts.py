@@ -370,6 +370,27 @@ def test_drafted_run_cannot_finish_before_editorial_pass(tmp_path, monkeypatch):
     assert finished["status"] == "completed"
 
 
+def test_finish_records_final_h1_as_history_title(tmp_path, monkeypatch):
+    monkeypatch.setenv("WEWRITE_HOME", str(tmp_path))
+    run = create_run(topic="工作标题")
+    (tmp_path / run["artifacts"]["article"]).write_text(
+        "# 最终发布标题\n\n正文内容", encoding="utf-8"
+    )
+    finished = finish_run({"seo": {"title": "旧工作标题"}}, run["run_id"])
+    assert finished["seo"]["title"] == "最终发布标题"
+    articles = load_history(tmp_path / "history.yaml")["articles"]
+    assert articles[0]["title"] == "最终发布标题"
+
+
+def test_finish_without_h1_keeps_seo_title(tmp_path, monkeypatch):
+    monkeypatch.setenv("WEWRITE_HOME", str(tmp_path))
+    run = create_run(topic="无标题文章")
+    (tmp_path / run["artifacts"]["article"]).write_text("只有正文，没有 H1", encoding="utf-8")
+    finish_run({"seo": {"title": "审稿阶段标题"}}, run["run_id"])
+    articles = load_history(tmp_path / "history.yaml")["articles"]
+    assert articles[0]["title"] == "审稿阶段标题"
+
+
 def _png_bytes(color="red"):
     buf = io.BytesIO()
     Image.new("RGB", (8, 8), color).save(buf, "PNG")

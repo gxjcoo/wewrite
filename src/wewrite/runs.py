@@ -54,6 +54,19 @@ def _now() -> str:
     return datetime.now().astimezone().isoformat(timespec="seconds")
 
 
+def _extract_h1(markdown_text: str) -> str:
+    """Text of the first Markdown H1, or '' when absent.
+
+    Same rule as the WeChat converter's _extract_title, so the history
+    title matches the title actually sent to the draft box.
+    """
+    for line in markdown_text.split("\n"):
+        stripped = line.strip()
+        if stripped.startswith("# ") and not stripped.startswith("## "):
+            return stripped[2:].strip()
+    return ""
+
+
 def _new_run_id() -> str:
     return datetime.now().strftime("%Y%m%d-%H%M%S") + "-" + secrets.token_hex(3)
 
@@ -358,7 +371,10 @@ def finish_run(patch: dict | None = None, run_id: str | None = None) -> dict:
         _deep_merge(state, patch)
     article_rel = (state.get("artifacts") or {}).get("article")
     article_path = home() / article_rel if article_rel else None
-    if not article_path or not article_path.is_file() or not article_path.read_text(encoding="utf-8").strip():
+    if not article_path or not article_path.is_file():
+        raise ValueError("Cannot finish run before a non-empty article is saved")
+    article_text = article_path.read_text(encoding="utf-8")
+    if not article_text.strip():
         raise ValueError("Cannot finish run before a non-empty article is saved")
     draft_rel = (state.get("artifacts") or {}).get("draft")
     draft_path = home() / draft_rel if draft_rel else None
@@ -388,6 +404,9 @@ def finish_run(patch: dict | None = None, run_id: str | None = None) -> dict:
         provenance["unverified_sources"] = sum(
             1 for item in sources if item.get("status") != "verified"
         )
+    final_title = _extract_h1(article_text)
+    if final_title:
+        state.setdefault("seo", {})["title"] = final_title
     state["status"] = "completed"
     state["last_error"] = None
     _write_state(state)
