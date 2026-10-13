@@ -60,3 +60,9 @@ mds/
 
 # 本地代码索引（CodeGraph）
 .codegraph/
+
+baoyu-skills/
+
+# 本地临时渲染产物
+/.html
+/tr_*.html
