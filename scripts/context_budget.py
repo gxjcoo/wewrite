@@ -33,6 +33,14 @@ AUXILIARY = {
     "style-template.md",   # only referenced inside onboard.md
     "pipeline-state.md",   # maintainer contract doc, not loaded at runtime
     "wechat-constraints.md",  # dev-reference (key limits inlined in wewrite-publish)
+    # wewrite-visual v2：分步按需加载，任何一次运行只读取当前步骤那一份，
+    # 从不整路径全载；SKILL.md 顶部的完整读取仍只算 visual-guide.md
+    "requirements-contract.md",
+    "style-library.md",
+    "archetypes.md",
+    "visual-dna.md",
+    "prompt-compiler.md",
+    "quality-gates.md",
 }
 
 # A normal full run loads the main entry + the five pipeline modules.
