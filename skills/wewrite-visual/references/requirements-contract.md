@@ -7,7 +7,7 @@
 
 ```yaml
 version: 1
-mode: full            # cover | full | prompts
+mode: cover           # cover（默认：只封面、正文不插图）| full（用户明确要正文配图）| prompts
 platform: wechat
 brief:
   core_claim: ""      # 一句话核心主张，来自终稿
@@ -53,6 +53,8 @@ budget:
    或真实品牌标识。
 5. **预算**：资产数量超过 `max_images`；按 `estimated_cost_per_image` 估算的费用超过
    `max_cost`。
+6. **模式**：`cover` 模式（默认）的 `assets` 里出现任何非封面（figure-*）资产——默认正文不
+   插图，要内文图必须先有用户明确要求并把模式改成 `full`。
 
 ## 约束优先级
 

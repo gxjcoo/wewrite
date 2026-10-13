@@ -78,8 +78,21 @@ def cmd_publish(args):
 
     _print_validation(result.html)
 
-    print(f"Title: {result.title}")
-    print(f"Digest: {result.digest}")
+    # Resolve the exact title/digest that will be sent to the draft box,
+    # and say where each came from — otherwise an --override looks like it
+    # was ignored because the converter's auto digest was printed earlier.
+    title = args.title or result.title or Path(args.input).stem
+    digest = args.digest or result.digest
+    if args.title:
+        title_src = "--title override"
+    elif result.title:
+        title_src = "article H1"
+    else:
+        title_src = "filename"
+    digest_src = "--digest override" if args.digest else "auto (first paragraph)"
+
+    print(f"Title: {title}  [{title_src}]")
+    print(f"Digest: {digest}  [{digest_src}]")
     print(f"Images found: {len(result.images)}")
 
     # Get access token
@@ -117,8 +130,6 @@ def cmd_publish(args):
         print(f"  -> media_id: {thumb_media_id}")
 
     # Create draft
-    title = args.title or result.title or Path(args.input).stem
-    digest = args.digest or result.digest
     draft = create_draft(
         access_token=token,
         title=title,

@@ -6,12 +6,12 @@
 
 1. 从终稿提简报：核心主张、第一眼/第二眼、实体、情绪、可用真实数据
 2. 写 `visual-contract.yaml`（比例/风格/结构/文字/预算）——冲突即阻断
-3. 选 1 种风格 + 每图 1 种结构；slate-amber 为默认色板
+3. **默认 cover：只选封面 1 种风格 + 1 种结构，不建任何 figure；full 才选内文图**；slate-amber 为默认色板
 4. 8 段式编译英文提示词 → image-prompts.md；批量清单 → images.json
 5. `wewrite image-gen --manifest ... --max-images ... [--max-cost ...]`，每批 ≤4 张
 6. 正常尺寸 + 25% 缩略图各查一次；硬失败重生成、只试一次
-7. 插图只进 article-illustrated.md，原稿不动
-8. 更新 images.cover/figures，`wewrite run step visual completed`
+7. **cover 不插图、不生成带图副本；只有 full 才把内文图插进 article-illustrated.md，原稿永远不动**
+8. 更新 images.cover（full 再加 figures），`wewrite run step visual completed`
 
 ## 尺寸
 

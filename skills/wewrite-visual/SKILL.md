@@ -1,8 +1,9 @@
 ---
 name: wewrite-visual
 description: |
-  WeWrite 视觉模块：为公众号文章生成封面和必要的内文配图，或只交付提示词。触发词：
-  封面图、公众号配图、给文章配图、换封面。通用绘图和 logo 设计不触发。
+  WeWrite 视觉模块：默认只为公众号文章生成封面（正文不插图）；仅当用户明确要求正文配图时
+  才做内文图，或只交付提示词。触发词：封面图、公众号配图、给文章配图、换封面。通用绘图和
+  logo 设计不触发。
 allowed-tools:
   - Bash
   - Read
@@ -15,6 +16,7 @@ allowed-tools:
 
 ## 定位与边界
 
+- **默认只做封面，正文不插图。** 一篇文章默认 `cover` 模式：只生成封面 `cover.jpg`，不生成、不插入任何内文图。只有用户明确说"正文配图 / 完整配图 / 文章里也插图"等，才进入 `full`。
 - AI 成图是**虚构画面**，只承担阅读停顿、情绪烘托和视觉钩子，**不是事实证据**；文章的事实支撑来自 verified 信源。
 - 画面里的数字、标签、文件样式一律视为"布景"：除 `short-exact` 中逐字来自文章的短文字外，不允许可读的具体数据，不伪造真实文件的红头、公章、签名，不出现真实品牌标识。
 - 本模块只做 AI 生图路线；检索真实照片、确定性 HTML 渲染图表目前都不在范围内。
@@ -29,8 +31,9 @@ allowed-tools:
 不写任务状态；提示词和图片放进文章同目录的 `<文件名>-assets/`，带图副本写成
 `<文件名>-illustrated.md`。
 
-根据本轮原话确定模式并用 `wewrite run update` 记录：只要封面用 `cover`，封面和必要内文图
-用 `full`，只要提示词用 `prompts`。不要沿用写作模式猜测用户想生图。`prompts` 或
+根据本轮原话确定模式并用 `wewrite run update` 记录：**默认 `cover`（只要封面、正文不插图）**；
+只有用户明确要求文章内也配图才用 `full`；只要提示词用 `prompts`。不要沿用写作模式猜测用户
+想生图，也不要把"配图/完整制作"自动理解成内文插图——语义不明时按 `cover`。`prompts` 或
 `skip_image_gen=true` 时仍要完成提示词，但不调用付费图片服务。
 
 ## 工作流
@@ -54,10 +57,10 @@ allowed-tools:
 
 ### 3. 选型
 
-- 从风格库选 **1 种主风格**（封面），正文配图用同一风格的简化表达：
-  `{skill_dir}/references/style-library.md`
-- 封面选 **1 种结构**，正文配图按信息功能选类型与密度：
-  `{skill_dir}/references/archetypes.md`
+- **`cover`（默认）只选封面**：从风格库选 **1 种主风格**、为封面选 **1 种结构**即可，不建任何 figure 资产。
+- `full` 才选正文配图：沿用封面主风格的简化表达，正文图按信息功能选类型与密度。
+- 参考文档：
+  `{skill_dir}/references/style-library.md`、`{skill_dir}/references/archetypes.md`
 - 系列一致性（默认 70% 稳定、30% 变化，slate-amber 为默认色板）：
   `{skill_dir}/references/visual-dna.md`
 
@@ -100,12 +103,13 @@ wewrite image-gen --manifest {run_dir}/images.json --max-images {max_images} --m
 
 ### 7. 组装带图副本
 
-`full` 模式先复制原始正文到 `artifacts.illustrated_article`，再把采用的内文图插到副本
-相应段落；封面不插入正文。任何模式都不得覆盖原始正文。
+- `cover`（默认）：**不生成 `artifacts.illustrated_article`，正文一张图都不插**，只交付封面文件；排版/发布直接用原始 `artifacts.article`。
+- `full`：先复制原始正文到 `artifacts.illustrated_article`，再把采用的内文图插到副本相应段落；封面仍不插入正文。
+- 任何模式都不得覆盖原始正文。
 
 ### 8. 封存
 
-更新 `images.cover`、`images.figures`，再执行：
+更新 `images.cover`；`full` 模式再写 `images.figures`（`cover` 模式留空），再执行：
 
 ```bash
 wewrite run step visual completed

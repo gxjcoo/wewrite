@@ -112,10 +112,10 @@ wewrite run finish
 
 ### A. 配图
 
-- 用户说“配个封面”时，把 `visual.mode` 设为 `cover`。
-- 用户说“完整配图”或“完整制作”时，把 `visual.mode` 设为 `full`。
+- **默认配图、说"配个封面"都只做封面**：把 `visual.mode` 设为 `cover`——只生成封面，正文不插图、不生成带图副本。
+- 只有用户明确说"正文也配图 / 完整配图 / 文章里插图"时，才把 `visual.mode` 设为 `full`。
 - 用户只要提示词时设为 `prompts`；缺少图片配置也自动降级为提示词。
-- 执行 `wewrite-visual`。它只能生成独立图片和带图副本，不得覆盖 `artifacts.article`。
+- 执行 `wewrite-visual`。`cover` 模式只产出封面，不动任何正文；`full` 才能生成带图副本。
 
 文章已经完成也直接使用当前任务，不要新建写作任务。严格遵守 `max_images` 与 `max_cost`。
 
@@ -128,8 +128,9 @@ wewrite run finish
 
 ### C. “完整制作”快捷方式
 
-先完整跑完内容流程并封存正文，再依次执行 `wewrite-visual` 的 `full` 模式和
-`wewrite-publish` 的本地预览。它是三个独立动作的连续调用，不赋予发布权限。
+先完整跑完内容流程并封存正文，再依次执行 `wewrite-visual` 的 `cover` 模式（只封面，正文不插图）和
+`wewrite-publish` 的本地预览。它是三个独立动作的连续调用，不赋予发布权限。用户明确要正文配图时，
+才把配图环节换成 `full`。
 
 最后告诉用户标题、原始文章路径、带图副本路径、来源数量、图片/预览结果、是否进入
 草稿箱，以及发生的降级。

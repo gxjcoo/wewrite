@@ -17,7 +17,7 @@
 
 ---
 
-一个给 AI Agent（Claude Code / Codex / OpenClaw / Hermes 等）用的公众号内容 Skill。你说「写一篇公众号文章」，它会抓热点、评选题、搜真实素材、按你的人格风格出稿并完成编辑审稿。正文完成后，你可以直接交付，也可以再单独要求配图、排版预览或推送草稿箱。原始正文始终保留；配图会生成独立图片和带图副本。想改就按自己的意思改，再让它「学习我的修改」，下一篇会更像你。
+一个给 AI Agent（Claude Code / Codex / OpenClaw / Hermes 等）用的公众号内容 Skill。你说「写一篇公众号文章」，它会抓热点、评选题、搜真实素材、按你的人格风格出稿并完成编辑审稿。正文完成后，你可以直接交付，也可以再单独要求封面、排版预览或推送草稿箱。**配图默认只做封面、正文不插图**；只有你明确要内文图时才做正文配图和带图副本，原始正文始终保留。想改就按自己的意思改，再让它「学习我的修改」，下一篇会更像你。
 
 ```
 "写一篇公众号文章"
@@ -26,7 +26,7 @@
   → 编辑判断 → 必要时改稿并复审 → 交付成稿
 
 完成后按需追加：
-  ├─ 配封面 / 完整配图 → 图片 + 带图副本
+  ├─ 配封面（默认，正文不插图）/ 明确要正文配图 → 封面 + 内文图 + 带图副本
   ├─ 排版预览           → 微信兼容 HTML
   └─ 推到草稿箱         → 明确授权且条件满足后发布
 ```
@@ -97,7 +97,7 @@ skill 目录自包含、复制即用；CLI 另装一条：`uv tool install wewri
 
 ```
 你：写一篇公众号文章                → 审过的本地成稿（默认不生图、不发布）
-你：完整制作一篇公众号文章          → 成稿 + 配图 + 本地预览
+你：完整制作一篇公众号文章          → 成稿 + 封面（正文不插图）+ 本地预览
 你：推到公众号草稿箱                → 明确授权后才发布
 你：今天写什么                      → 只要选题
 你：检查一下                        → 生成档案 + 质量自检
@@ -146,8 +146,8 @@ cp config.example.yaml ~/.wewrite/config.yaml
 | 今天写什么 / 找几个选题 | `wewrite-topic` | 10 个评分排序的选题 |
 | 就这个选题写一篇 | `wewrite-write` | 文章任务书 + 主张与来源清单 + 初稿 |
 | 检查一下 / 这篇怎么样 | `wewrite-review` | 事实核对 + 必要改稿 + 通过后生成成稿与编辑报告 |
-| 给这篇配个封面 | `wewrite-visual` | 一张封面图；不改原始正文 |
-| 给这篇完整配图 | `wewrite-visual` | 封面 + 必要内文图 + 带图副本 |
+| 给这篇配个封面（默认） | `wewrite-visual` | 一张封面图；正文不插图、不改原始正文 |
+| 给这篇正文也配图（需明说） | `wewrite-visual` | 封面 + 必要内文图 + 带图副本 |
 | 推到草稿箱 / 换个主题 | `wewrite-publish` | 条件满足时生成微信草稿，否则保留本地 HTML |
 | 改写成小红书 / 抖音版 | `wewrite-rewrite` | 内容级真改的平台版本 |
 | 学习我的修改 / 导入范文 | `wewrite-learn` | playbook 规则 / 风格库 |
@@ -182,7 +182,7 @@ skill 目录复制到哪都能用；CLI 与 skill 独立安装升级；换机器
 | 编辑成稿 | 准确、观点、有用、合声、好读五项判断；不通过就直接改稿并复审 | wewrite-review / `wewrite content-eval` |
 | 风险提示 | 11 项机械检查，定位套话、碎句、重复节奏等；不判断作者身份 | `wewrite score` |
 | SEO 优化 | 标题策略 / 摘要 / 关键词 / 标签 | wewrite-review |
-| 视觉 AI | 按任务设置生成封面/必要配图，生成前检查数量和预估费用 | `wewrite image-gen` |
+| 视觉 AI | 默认只生成封面（正文不插图），明说才出内文图；生成前检查数量和预估费用 | `wewrite image-gen` |
 | 排版发布 | 18+ 主题 + 微信兼容修复 + 暗黑模式 | `wewrite preview/publish` |
 | 多平台改写 | 一稿 → 小红书/抖音，内容级真改 + 原创度门 | wewrite-rewrite |
 | 效果复盘 | 微信数据分析 API 回填阅读数据，反哺选题 | `wewrite stats` |
@@ -328,12 +328,12 @@ Step 5  编辑判断 → 必要时改稿并复审 → 成稿与编辑报告    �
 Step 6  封存原始正文 → 写入历史                         ← 主入口 wewrite
 
 正文完成后，可独立执行：
-  ├─ 配封面 / 完整配图                                 ← wewrite-visual
+  ├─ 配封面（默认，正文不插图）/ 明说才出正文配图    ← wewrite-visual
   ├─ 微信排版与本地预览                                ← wewrite-publish
   └─ 明确授权后推送草稿箱                              ← wewrite-publish
 ```
 
-默认连续完成正文，但“写一篇”只交付本地成稿。“完整制作”是正文、配图和本地预览三个独立
+默认连续完成正文，但“写一篇”只交付本地成稿。“完整制作”是正文、封面（默认正文不插图）和本地预览三个独立
 动作的组合快捷方式；“推到草稿箱”才授予发布权限，而且不会自动生图。已完成文章可以继续
 配图、排版或发布，原始正文不被覆盖。每篇文章使用独立任务目录并可恢复（契约见
 [`skills/wewrite/references/pipeline-state.md`](https://github.com/imraywang/wewrite/blob/main/skills/wewrite/references/pipeline-state.md)）。
@@ -349,7 +349,7 @@ wewrite/
 │   ├── wewrite-topic/          # 选题（topic-selection.md）
 │   ├── wewrite-write/          # 任务书 + 主张证据 + 安全增强 + 初稿（personas/ 7 人格…）
 │   ├── wewrite-review/         # 事实核对 + 改稿复审 + 标题摘要 + 编辑报告
-│   ├── wewrite-visual/         # 封面 + 必要配图（数量与费用上限）
+│   ├── wewrite-visual/         # 默认只做封面（正文不插图），明说才出内文图（数量与费用上限）
 │   ├── wewrite-publish/        # 排版 + 发布 + 主题画廊 + 小绿书（wechat-constraints.md）
 │   ├── wewrite-learn/          # 学习修改 / 导入范文 / 学排版（learn-edits.md）
 │   ├── wewrite-stats/          # 文章数据复盘（effect-review.md）
